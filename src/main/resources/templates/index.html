@@ -1,0 +1,227 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>YourShop - Home</title>
+  <!-- Bootstrap CSS -->
+  <link
+          rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+  />
+  <style>
+    /* Basic Colors and Styles */
+    body {
+      background-color: #f1f2f4;
+      font-family: Arial, sans-serif;
+    }
+    .navbar-yourshop {
+      background-color: #2874f0; /* Primary blue color */
+    }
+    .navbar-yourshop .navbar-brand {
+      color: #fff;
+      font-weight: bold;
+    }
+    .navbar-yourshop .nav-link,
+    .navbar-yourshop .navbar-text {
+      color: #fff !important;
+    }
+    .search-bar {
+      width: 400px;
+    }
+    .btn-search {
+      background-color: #ffdf00; /* Yellow accent */
+      border: none;
+      color: #000;
+      border-radius: 0;
+    }
+    .category-bar {
+      background-color: #fff;
+      padding: 0.5rem 1rem;
+    }
+    .category-bar a {
+      margin: 0 1rem;
+      color: #000;
+      font-weight: 500;
+      text-decoration: none;
+    }
+    .banner-section {
+      position: relative;
+      margin: 1rem auto;
+      max-width: 1200px;
+    }
+    .banner-img {
+      width: 100%;
+      border-radius: 5px;
+      object-fit: cover;
+    }
+    .section-title {
+      margin: 2rem 0 1rem 0;
+      font-weight: bold;
+      font-size: 1.4rem;
+    }
+    .product-card {
+      background-color: #fff;
+      border: none;
+      border-radius: 5px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+      transition: transform 0.2s ease;
+    }
+    .product-card:hover {
+      transform: translateY(-3px);
+    }
+    .product-card img {
+      width: 100%;
+      height: 150px;
+      object-fit: contain;
+      padding: 1rem;
+    }
+    .product-info {
+      padding: 0.5rem 1rem;
+    }
+    /* Responsive adjustments */
+    @media (max-width: 576px) {
+      .search-bar {
+        width: 200px;
+      }
+    }
+  </style>
+</head>
+<body>
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-yourshop">
+  <a class="navbar-brand ml-2" href="/">YourShop</a>
+  <button
+          class="navbar-toggler"
+          type="button"
+          data-toggle="collapse"
+          data-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+          style="color: #fff;"
+  >
+    <span class="navbar-toggler-icon" style="color: #fff;"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <!-- Search Bar -->
+    <form class="form-inline mx-auto d-flex search-bar" th:action="@{/products}" method="get">
+      <input
+              class="form-control"
+              type="search"
+              placeholder="Search for Products, Brands and More"
+              aria-label="Search"
+      />
+      <button class="btn btn-search" type="submit">Search</button>
+    </form>
+    <!-- Right-side Links -->
+    <ul class="navbar-nav mr-2">
+      <li class="nav-item">
+        <a class="nav-link" href="/login">Login</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/cart">Cart</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Become a Seller</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<!-- CATEGORY BAR -->
+<div class="category-bar d-flex justify-content-center">
+  <a href="#">Mobiles</a>
+  <a href="#">Fashion</a>
+  <a href="#">Electronics</a>
+  <a href="#">Home & Furniture</a>
+  <a href="#">Appliances</a>
+  <a href="#">Travel</a>
+  <a href="#">Beauty, Toys & More</a>
+</div>
+
+<!-- BANNER SECTION -->
+<div class="banner-section">
+  <!-- Random placeholder banner image (1200x400) -->
+  <img
+          src="https://picsum.photos/1200/400?random=1"
+          alt="Banner"
+          class="banner-img"
+  />
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="container">
+  <h2 class="section-title">Best of Electronics</h2>
+  <div class="row">
+    <!-- Example product card -->
+    <div class="col-6 col-md-3 mb-4">
+      <div class="product-card">
+        <!-- Random placeholder product image (150x150) -->
+        <img
+                src="https://picsum.photos/150?random=2"
+                alt="Product"
+        />
+        <div class="product-info">
+          <h6>Smartphone</h6>
+          <p class="mb-1">₹10,999</p>
+          <p class="text-success">Special Offer</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-6 col-md-3 mb-4">
+      <div class="product-card">
+        <img
+                src="https://picsum.photos/150?random=3"
+                alt="Product"
+        />
+        <div class="product-info">
+          <h6>Laptop</h6>
+          <p class="mb-1">₹59,999</p>
+          <p class="text-success">Great Deal</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-6 col-md-3 mb-4">
+      <div class="product-card">
+        <img
+                src="https://picsum.photos/150?random=4"
+                alt="Product"
+        />
+        <div class="product-info">
+          <h6>Headphones</h6>
+          <p class="mb-1">₹1,499</p>
+          <p class="text-success">20% Off</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-6 col-md-3 mb-4">
+      <div class="product-card">
+        <img
+                src="https://picsum.photos/150?random=5"
+                alt="Product"
+        />
+        <div class="product-info">
+          <h6>Smart Watch</h6>
+          <p class="mb-1">₹2,999</p>
+          <p class="text-success">Flash Sale</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER (Optional) -->
+<footer class="bg-white text-center p-3 mt-4">
+  <p class="mb-0">© 2025 YourShop. All rights reserved.</p>
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script
+        src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+></script>
+</body>
+</html>

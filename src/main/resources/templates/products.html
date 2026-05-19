@@ -1,0 +1,85 @@
+﻿<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Products - E-commerce Store</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <style>
+    .card-img-top {
+      height: 200px;
+      object-fit: contain;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light mt-2">
+    <a class="navbar-brand" href="/">E-commerce</a>
+    <div class="collapse navbar-collapse">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item"><a class="nav-link" href="/products">Products</a></li>
+        <li class="nav-item"><a class="nav-link" href="/cart">Cart</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <h2 class="mt-4">Products</h2>
+
+  <div class="row">
+    <!-- iPhone 14 Pro -->
+    <div class="col-md-4">
+      <div class="card mb-4 shadow-sm">
+        <!-- iPhone 14 Pro in Deep Purple -->
+        <img
+                class="card-img-top"
+                src="https://upload.wikimedia.org/wikipedia/commons/8/8d/IPhone_14_Pro_in_Deep_Purple.png"
+                alt="iPhone 14 Pro"
+        >
+        <div class="card-body">
+          <h5 class="card-title">iPhone 14 Pro</h5>
+          <p class="card-text">Latest iPhone with amazing features.</p>
+          <p class="card-text">$999.99</p>
+          <a href="/product/1" class="btn btn-primary">View Details</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- MacBook Pro (M1) -->
+    <div class="col-md-4">
+      <div class="card mb-4 shadow-sm">
+        <!-- MacBook Pro M1 - 2020 -->
+        <img
+                class="card-img-top"
+                src="https://upload.wikimedia.org/wikipedia/commons/d/d7/MacBook_Pro_M1_-_2020.jpg"
+                alt="MacBook Pro M1"
+        >
+        <div class="card-body">
+          <h5 class="card-title">MacBook Pro (M1)</h5>
+          <p class="card-text">Powerful laptop for professionals.</p>
+          <p class="card-text">$1299.99</p>
+          <a href="/product/2" class="btn btn-primary">View Details</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- AirPods Max -->
+    <div class="col-md-4">
+      <div class="card mb-4 shadow-sm">
+        <!-- AirPods Max (2020) -->
+        <img
+                class="card-img-top"
+                src="https://upload.wikimedia.org/wikipedia/commons/2/2b/AirPods_Max_2020.jpg"
+                alt="AirPods Max"
+        >
+        <div class="card-body">
+          <h5 class="card-title">AirPods Max</h5>
+          <p class="card-text">Noise-cancelling headphones.</p>
+          <p class="card-text">$549.99</p>
+          <a href="/product/3" class="btn btn-primary">View Details</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

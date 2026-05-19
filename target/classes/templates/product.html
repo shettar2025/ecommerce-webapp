@@ -1,0 +1,36 @@
+﻿<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title th:text="${product.name} + ' - E-commerce Store'">Product Detail</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="/">E-commerce</a>
+    <div class="collapse navbar-collapse">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item"><a class="nav-link" href="/products">Products</a></li>
+        <li class="nav-item"><a class="nav-link" href="/cart">Cart</a></li>
+      </ul>
+    </div>
+  </nav>
+  <div class="mt-4">
+    <div class="row">
+      <div class="col-md-6">
+        <img th:src="${product.imageUrl}" class="img-fluid" alt="Product image">
+      </div>
+      <div class="col-md-6">
+        <h2 th:text="${product.name}">Product Name</h2>
+        <p th:text="${product.description}">Product Description</p>
+        <h4>$<span th:text="${product.price}">0.00</span></h4>
+        <form th:action="@{'/cart/add/' + ${product.id}}" method="post">
+          <button type="submit" class="btn btn-success">Add to Cart</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
