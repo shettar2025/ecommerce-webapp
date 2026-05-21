@@ -1,6 +1,9 @@
 @Library('jenkins-shared-lib') _
 pipeline {
     agent any
+    environment {
+    KUBECONFIG = '/var/lib/jenkins/.kube/config'
+}
 
     parameters {
         string(name: 'APP_NAME', defaultValue: 'ecommerce-app')
