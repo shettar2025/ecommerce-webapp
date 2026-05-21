@@ -82,10 +82,10 @@ pipeline {
 
         stage('Tag Docker Image') {
             steps {
-                sh '''
-                docker tag ecommerce-app:$IMAGE_TAG \
-                $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPO:$IMAGE_TAG
-                '''
+                sh """
+                docker tag ${params.APP_NAME}:${IMAGE_TAG} \
+                $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPO:${IMAGE_TAG}
+                """
             }
         }
 
