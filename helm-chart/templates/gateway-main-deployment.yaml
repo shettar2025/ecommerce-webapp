@@ -14,8 +14,8 @@ spec:
       labels:
         app: gateway
     spec:
-    imagePullSecrets:
-        - name: ecr-secret
+     imagePullSecrets:
+           - name: ecr-secret
       containers:
         - name: gateway
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
