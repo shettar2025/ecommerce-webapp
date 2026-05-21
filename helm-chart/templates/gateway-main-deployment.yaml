@@ -14,9 +14,11 @@ spec:
       labels:
         app: gateway
     spec:
+    imagePullSecrets:
+        - name: ecr-secret
       containers:
         - name: gateway
-          image: 818111884800.dkr.ecr.us-east-1.amazonaws.com/ecommerce-gateway:1.0
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           ports:
             - containerPort: 8080
               #probes
