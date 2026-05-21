@@ -4,24 +4,28 @@ metadata:
   name: gateway-deployment
   labels:
     app: gateway-deployment
+
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: gateway
+
   template:
     metadata:
       labels:
         app: gateway
+
     spec:
-     imagePullSecrets:
-           - name: ecr-secret
+      imagePullSecrets:
+        - name: ecr-secret
+
       containers:
         - name: gateway
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           ports:
             - containerPort: 8080
-              #probes
+
           startupProbe:
             httpGet:
               path: /health
@@ -29,23 +33,25 @@ spec:
             initialDelaySeconds: 20
             failureThreshold: 6
             periodSeconds: 5
+
           livenessProbe:
             httpGet:
               path: /health
               port: 8080
             periodSeconds: 10
             timeoutSeconds: 2
+
           readinessProbe:
             httpGet:
               path: /health
               port: 8080
             periodSeconds: 10
             timeoutSeconds: 2
-            #service discovery
+
           env:
             - name: ECOMMERCE_SERVICE_URL
-              value: "http://ecommerce-service.default.svc.cluster.local:8081" 
-            #resources quotas
+              value: "http://ecommerce-service.default.svc.cluster.local:8081"
+
           resources:
             requests:
               cpu: "100m"
@@ -57,12 +63,14 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
- name: gateway-service
+  name: gateway-service
+
 spec:
- type: ClusterIP
- selector:
-   app: gateway
- ports:
-   - name: http
-     port: 8080 
-     targetPort: 8080
+  type: ClusterIP
+  selector:
+    app: gateway
+
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
