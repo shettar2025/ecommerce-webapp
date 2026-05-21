@@ -89,9 +89,9 @@ stage('Extract App Info from POM') {
                     credentialsId: 'aws-creds'
                 ]]) {
                     sh '''
-                    aws ecr get-login-password --region $AWS_REGION | \
+                    aws ecr get-login-password --region ${AWS_REGION} | \
                     docker login --username AWS \
-                    --password-stdin $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
+                    --password-stdin ${ACCOUNT_ID}.dkr.ecr.$AWS_REGION.amazonaws.com
                     '''
                 }
             }
@@ -101,7 +101,7 @@ stage('Extract App Info from POM') {
             steps {
                 sh """
                 docker tag ${params.APP_NAME}:${IMAGE_TAG} \
-                $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPO:${IMAGE_TAG}
+                ${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO}:${IMAGE_TAG}
                 """
             }
         }
@@ -109,7 +109,7 @@ stage('Extract App Info from POM') {
         stage('Push to ECR') {
             steps {
                 sh '''
-                docker push $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPO:$IMAGE_TAG
+                docker push ${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO}:${IMAGE_TAG}
                 '''
             }
         }
@@ -120,8 +120,8 @@ stage('Extract App Info from POM') {
                 sh """
                 helm upgrade --install ecommerce-app ./helm-chart \
                 -f ./helm-chart/values-${ENV}.yaml \
-                --set image.repository=$ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPO \
-                --set image.tag=$IMAGE_TAG
+                --set image.repository=${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO} \
+                --set image.tag=${IMAGE_TAG}
                 """
             }
         }
