@@ -1,7 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: app-config
-data:
-  DB_URL: "jdbc:postgresql://postgres-service:5432/ecommercedb"
-  DB_USERNAME: "postgres"
