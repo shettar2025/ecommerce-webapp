@@ -56,14 +56,31 @@ pipeline {
                 sh 'mvn test'
             }
         }
+stage('Extract App Info from POM') {
+    steps {
+        script {
+            env.IMAGE_NAME = sh(
+                script: "mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout",
+                returnStdout: true
+            ).trim()
 
-        stage('Build Docker Image') {
-            steps {
-                sh '''
-               docker build -t ${params.APP_NAME}:${IMAGE_TAG} .
-                '''
-            }
+            env.IMAGE_TAG = sh(
+                script: "mvn help:evaluate -Dexpression=project.version -q -DforceStdout",
+                returnStdout: true
+            ).trim()
         }
+
+        //echo "Image Name: ${env.IMAGE_NAME}"
+       // echo "Image Tag: ${env.IMAGE_TAG}"
+    }
+}
+        stage('Build Docker Image') {
+    steps {
+        sh """
+        docker build -t ${env.IMAGE_NAME}:${env.IMAGE_TAG} .
+        """
+    }
+}
 
         stage('Login to ECR') {
             steps {
