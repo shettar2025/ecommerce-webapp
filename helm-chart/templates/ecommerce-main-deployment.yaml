@@ -15,7 +15,7 @@ spec:
         app: ecommerce
     spec:
       imagePullSecrets:
-        - name: {{- toYaml .Values.imagePullSecrets | nindent 8 }}
+        - name: ecr-secret
         
       containers:
         - name: ecommerce
