@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway-deployment
+  labels:
+    app: gateway-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gateway
+  template:
+    metadata:
+      labels:
+        app: gateway
+    spec:
+      containers:
+        - name: gateway
+          image: 818111884800.dkr.ecr.us-east-1.amazonaws.com/ecommerce-gateway:1.0
+          ports:
+            - containerPort: 8080
+              #probes
+          startupProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 20
+            failureThreshold: 6
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            periodSeconds: 10
+            timeoutSeconds: 2
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            periodSeconds: 10
+            timeoutSeconds: 2
+            #service discovery
+          env:
+            - name: ECOMMERCE_SERVICE_URL
+              value: "http://ecommerce-service.default.svc.cluster.local:8081" 
+            #resources quotas
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+ name: gateway-service
+spec:
+ type: ClusterIP
+ selector:
+   app: gateway
+ ports:
+   - name: http
+     port: 8080 
+     targetPort: 8080
