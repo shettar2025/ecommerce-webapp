@@ -15,7 +15,7 @@ spec:
         app: ecommerce
     spec:
       imagePullSecrets:
-        - name: ecr-secret
+        - name: {{- toYaml .Values.imagePullSecrets | nindent 8 }}
         
       containers:
         - name: ecommerce
@@ -48,8 +48,7 @@ spec:
           - configMapRef:
               name: app-config
           - secretRef:
-                name: ecommerce-db-secret
-              
+              name: ecommerce-db-secret         
 
             #resources quotas
           resources:
