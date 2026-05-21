@@ -1,5 +1,5 @@
 # Use a minimal Java image
-FROM eclipse-temurin:17-jdk
+FROM eclipse-temurin:17-jdk-jammy
 
 # Create a directory in the container for the application
 WORKDIR /app
