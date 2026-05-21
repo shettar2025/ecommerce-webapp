@@ -37,7 +37,7 @@ pipeline {
 
         stage('Build and Extract Version from POM') {
             steps {
-                sh 'mvn clean deploy -DskipTests'
+                sh 'mvn clean package -DskipTests'
                 script {
                     env.IMAGE_TAG = sh(
                         script: "mvn help:evaluate -Dexpression=project.version -q -DforceStdout",
