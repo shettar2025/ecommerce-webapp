@@ -2,3 +2,5 @@ image:
   repository: ""
   tag: ""
   pullPolicy: Always
+  imagePullSecrets:
+  - name: ecr-secret
