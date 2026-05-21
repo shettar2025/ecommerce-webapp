@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: ecommerce
-          image: 818111884800.dkr.ecr.us-east-1.amazonaws.com/ecommerce:1.0
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           ports:
             - containerPort: 8081
 
