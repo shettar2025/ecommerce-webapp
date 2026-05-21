@@ -37,7 +37,7 @@ pipeline {
 
         stage('Build and Extract Version from POM') {
             steps {
-                sh 'mvn clean package -DskipTests'
+                sh 'mvn clean deploy -DskipTests'
                 script {
                     env.IMAGE_TAG = sh(
                         script: "mvn help:evaluate -Dexpression=project.version -q -DforceStdout",
@@ -57,7 +57,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 sh '''
-                docker build -t ecommerce-app:$IMAGE_TAG .
+                docker build -t $IMAGE_NAME:$IMAGE_TAG .
                 '''
             }
         }
@@ -94,7 +94,7 @@ pipeline {
             }
         }
 
-        // 🔥 NEW STAGE (IMPORTANT - Deployment)
+       
         stage('Deploy to Kubernetes using Helm') {
             steps {
                 sh """
