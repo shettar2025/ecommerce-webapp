@@ -63,7 +63,7 @@ pipeline {
 
         //echo "Image Name: ${env.IMAGE_NAME}"
        // echo "Image Tag: ${env.IMAGE_TAG}"
-    }
+    
 
      stage('Build Docker Image') {
     steps {
@@ -123,4 +123,5 @@ pipeline {
             sh 'docker logout || true'
         }
     }
+}
 }
