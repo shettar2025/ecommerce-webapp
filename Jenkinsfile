@@ -97,13 +97,13 @@ pipeline {
     }
 }
 
-     //   stage('Push to ECR') {
-        //    steps {
-         //       sh '''
-         //       docker push ${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO}:${IMAGE_TAG}
-        //        '''
-  //          }
- //       }
+        stage('Push to ECR') {
+            steps {
+                sh '''
+                docker push ${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO}:${IMAGE_TAG}
+               '''
+            }
+       }
                 stage('Push Helm Chart to ECR') {
             steps {
                 // Wrap in withCredentials so the AWS CLI can find your access keys
