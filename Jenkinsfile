@@ -97,29 +97,36 @@ pipeline {
     }
 }
 
-        stage('Push to ECR') {
+     //   stage('Push to ECR') {
+        //    steps {
+         //       sh '''
+         //       docker push ${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO}:${IMAGE_TAG}
+        //        '''
+  //          }
+ //       }
+                stage('Push Helm Chart to ECR') {
             steps {
-                sh '''
-                docker push ${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO}:${IMAGE_TAG}
-                '''
+                // Wrap in withCredentials so the AWS CLI can find your access keys
+                withCredentials([[
+                    $class: 'AmazonWebServicesCredentialsBinding',
+                    credentialsId: 'aws-creds'
+                ]]) {
+                    sh """
+                    # 1. Package the chart into a .tgz file
+                    helm package ./helm-chart
+                    
+                    # 2. Authenticate helm CLI with ECR OCI registry
+                    aws ecr get-login-password --region ${AWS_REGION} | \
+                    helm registry login --username AWS \
+                    --password-stdin ${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
+                    
+                    # 3. Push the packaged chart to ECR
+                    helm push ecommerce-app-*.tgz oci://${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
+                    """
+                }
             }
         }
-        stage('Push Helm Chart to ECR') {
-            steps {
-                sh """
-                # 1. Package the chart into a .tgz file
-                helm package ./helm-chart
-                
-                # 2. Authenticate helm CLI with ECR OCI registry
-                aws ecr get-login-password --region ${AWS_REGION} | \
-                helm registry login --username AWS \
-                --password-stdin ${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
-                
-                # 3. Push the packaged chart to ECR
-                helm push ecommerce-app-*.tgz oci://${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
-                """
-            }
-        }
+
        
         stage('Deploy to Kubernetes using Helm') {
             steps {
