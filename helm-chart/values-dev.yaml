@@ -1,7 +1,41 @@
+metadata:
+  deployment:
+    app: ecommerce
+  service:
+    app: ecommerce-service
+
 replicaCount: 1
 
-env:
-  name: dev
+image:
+  repository: 438987840260.dkr.ecr.eu-north-1.amazonaws.com/ecommerce-app
+  tag: "1.0"
+  pullPolicy: IfNotPresent
+
+port:
+  containerPort: 8081
+
+probes:
+  path: /health
+  port: 8081
+  initialDelaySeconds: 30
+  failureThreshold: 3
+  periodSeconds: 10
+  timeoutSeconds: 5
+
+configmap:
+  name: ecommerce-config
+
+secret:
+  name: ecommerce-secret
+
+resources:
+  cpu: "500m"
+  memory: "256Mi"
+  limits:
+    cpu: "1"
+    memory: "512Mi"
 
 service:
-  type: NodePort
+  type: ClusterIP
+  port: 8081
+  targetPort: 8081
