@@ -173,7 +173,19 @@ stage('Configure kubectl') {
         }
     }
 }
-       
+    stage('Check AWS Identity') {
+    steps {
+        sh '''
+        aws sts get-caller-identity
+        aws eks update-kubeconfig \
+          --region ${AWS_REGION} \
+          --name ${EKS_CLUSTER}
+
+        kubectl config current-context
+        kubectl get nodes
+        '''
+    }
+}   
         stage('Deploy to Kubernetes using Helm') {
             steps {
                 sh """
