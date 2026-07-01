@@ -173,19 +173,29 @@ stage('Configure kubectl') {
         }
     }
 }
-    stage('Check AWS Identity') {
+    stage('Debug AWS Identity') {
     steps {
-        sh '''
-        aws sts get-caller-identity
-        aws eks update-kubeconfig \
-          --region ${AWS_REGION} \
-          --name ${EKS_CLUSTER}
+        withCredentials([[
+            $class: 'AmazonWebServicesCredentialsBinding',
+            credentialsId: 'aws-creds'
+        ]]) {
+            sh '''
+            echo "===== AWS Identity ====="
+            aws sts get-caller-identity
 
-        kubectl config current-context
-        kubectl get nodes
-        '''
+            echo "===== Kubeconfig ====="
+            aws eks update-kubeconfig \
+              --region ${AWS_REGION} \
+              --name ${EKS_CLUSTER}
+
+            kubectl config current-context
+
+            echo "===== Nodes ====="
+            kubectl get nodes
+            '''
+        }
     }
-}   
+}  
         stage('Deploy to Kubernetes using Helm') {
             steps {
                 sh """
