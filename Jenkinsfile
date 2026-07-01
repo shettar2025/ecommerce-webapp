@@ -235,8 +235,7 @@ stage('Configure kubectl') {
 
             kubectl get svc -n ecommerce
 
-            kubectl rollout status deployment/ecommerce-app \
-              -n ecommerce
+            kubectl rollout status deployment/${IMAGE_NAME}-deployment -n ${NAMESPACE}
             '''
         }
     }
