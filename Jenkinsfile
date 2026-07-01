@@ -197,17 +197,29 @@ stage('Configure kubectl') {
     }
 }  
         stage('Deploy to Kubernetes using Helm') {
-            steps {
-                sh """
+    steps {
+        withCredentials([[
+            $class: 'AmazonWebServicesCredentialsBinding',
+            credentialsId: 'aws-creds'
+        ]]) {
+
+            sh '''
+            aws eks update-kubeconfig \
+              --region ${AWS_REGION} \
+              --name ${EKS_CLUSTER}
+
+            kubectl get nodes
+
             helm upgrade --install ecommerce-app ./helm-chart \
-          --namespace ecommerce \
+              --namespace ecommerce \
               --create-namespace \
-          -f ./helm-chart/values-${ENV}.yaml \
-          --set image.repository=${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO} \
-          --set image.tag=${IMAGE_TAG}
-            """
-            }
+              -f ./helm-chart/values-${ENV}.yaml \
+              --set image.repository=${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO} \
+              --set image.tag=${IMAGE_TAG}
+            '''
         }
+    }
+}
         stage('Verify Deployment') {
     steps {
         sh '''
