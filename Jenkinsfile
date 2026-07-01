@@ -1,9 +1,7 @@
 @Library('jenkins-shared-lib') _
 pipeline {
     agent any
-    environment {
-    KUBECONFIG = '/var/lib/jenkins/.kube/config'
-}
+
 
     parameters {
         string(name: 'APP_NAME', defaultValue: 'ecommerce-app')
@@ -13,17 +11,26 @@ pipeline {
     stages {
 
         stage('Initialize') {
-            steps {
-                script {
-                    def config = constant(params.APP_NAME)
-                    env.ACCOUNT_ID = config.ACCOUNT_ID
-                    env.AWS_REGION = config.AWS_REGION
-                    env.ECR_REPO   = config.ECR_REPO
-                    env.ECR_URL    = config.ECR_URL
-                    env.GIT_URL    = config.GIT_URL
-                }
-            }
+    steps {
+        script {
+
+            def config = constant(params.APP_NAME)
+
+            env.ACCOUNT_ID = config.ACCOUNT_ID
+            env.AWS_REGION = config.AWS_REGION
+
+            env.ECR_REPO   = config.ECR_REPO
+            env.ECR_URL    = config.ECR_URL
+            env.GIT_URL    = config.GIT_URL
+            env.IMAGE_NAME = config.IMAGE_NAME
+
+            env.EKS_CLUSTER = config.EKS_CLUSTER
+            env.TF_DIR      = config.TF_DIR
+            env.HELM_DIR    = config.HELM_DIR
+            env.NAMESPACE   = config.NAMESPACE
         }
+    }
+}
 
         stage('Checkout') {
             steps {
@@ -104,6 +111,14 @@ pipeline {
                '''
             }
        }
+        stage('Package Helm Chart') {
+    steps {
+        sh '''
+        helm lint ./helm-chart
+        helm package ./helm-chart
+        '''
+    }
+}
                 stage('Push Helm Chart to ECR') {
             steps {
                 // Wrap in withCredentials so the AWS CLI can find your access keys
@@ -126,18 +141,60 @@ pipeline {
                 }
             }
         }
+stage('Configure kubectl') {
+    steps {
+        withCredentials([[
+            $class: 'AmazonWebServicesCredentialsBinding',
+            credentialsId: 'aws-creds'
+        ]]) {
+            sh '''
+            aws eks update-kubeconfig \
+              --region ${AWS_REGION} \
+              --name ${EKS_CLUSTER}
 
+            kubectl get nodes
+            '''
+        }
+    }
+}
+        stage('Test EKS') {
+    steps {
+        withCredentials([[
+            $class: 'AmazonWebServicesCredentialsBinding',
+            credentialsId: 'aws-creds'
+        ]]) {
+            sh '''
+            aws eks update-kubeconfig \
+              --region eu-north-1 \
+              --name eks-dev
+
+            kubectl get nodes
+            '''
+        }
+    }
+}
        
         stage('Deploy to Kubernetes using Helm') {
             steps {
                 sh """
-                helm upgrade --install ecommerce-app ./helm-chart \
-                -f ./helm-chart/values-${ENV}.yaml \
-                --set image.repository=${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO} \
-                --set image.tag=${IMAGE_TAG}
-                """
+            helm upgrade --install ecommerce-app ./helm-chart \
+          --namespace ecommerce \
+              --create-namespace \
+          -f ./helm-chart/values-${ENV}.yaml \
+          --set image.repository=${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO} \
+          --set image.tag=${IMAGE_TAG}
+            """
             }
         }
+        stage('Verify Deployment') {
+    steps {
+        sh '''
+        kubectl get pods -n ecommerce
+        kubectl get svc -n ecommerce
+        kubectl rollout status deployment/ecommerce-app -n ecommerce
+        '''
+    }
+}
     }
     post {
         always {
