@@ -220,13 +220,25 @@ stage('Configure kubectl') {
         }
     }
 }
-        stage('Verify Deployment') {
+    stage('Verify Deployment') {
     steps {
-        sh '''
-        kubectl get pods -n ecommerce
-        kubectl get svc -n ecommerce
-        kubectl rollout status deployment/ecommerce-app -n ecommerce
-        '''
+        withCredentials([[
+            $class: 'AmazonWebServicesCredentialsBinding',
+            credentialsId: 'aws-creds'
+        ]]) {
+            sh '''
+            aws eks update-kubeconfig \
+              --region ${AWS_REGION} \
+              --name ${EKS_CLUSTER}
+
+            kubectl get pods -n ecommerce
+
+            kubectl get svc -n ecommerce
+
+            kubectl rollout status deployment/ecommerce-app \
+              -n ecommerce
+            '''
+        }
     }
 }
     }
