@@ -46,9 +46,9 @@ spec:
 
           envFrom:
           - configMapRef:
-              name: app-config
+              name: ecommerce-config
           - secretRef:
-              name: ecommerce-db-secret         
+              name: ecommerce-secret        
 
             #resources quotas
           resources:
